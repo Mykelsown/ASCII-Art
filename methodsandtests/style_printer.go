@@ -5,19 +5,20 @@ import (
 	"strings"
 )
 
-func Printer(str string) (string, int, int) {
+func Printer(str string) (string, int) {
 	bufferedStyleFile := FileHandler()
 	line := 1
-	chLine := 0
+	chLine := 1
+	charStartingLine := make([]int, len(str))
 	var char strings.Builder
 	for bufferedStyleFile.Scan() {
 		for _, ch := range str {
-			charStartingLine := make([]int, len(str))
 			if ch >= ' ' || ch <= '~' {
 				intCh := int(ch - ' ')
-				chLine = intCh*9 
+				chLine = intCh * 9
 				charStartingLine = append(charStartingLine, chLine)
 			}
+
 			if line >= int(chLine) && line <= int(chLine)+9 {
 				char.WriteString(bufferedStyleFile.Text() + "\n")
 				break
@@ -28,5 +29,5 @@ func Printer(str string) (string, int, int) {
 	if err := bufferedStyleFile.Err(); err != nil {
 		log.Fatal(err)
 	}
-	return  char.String(), line, chLine
+	return char.String(), chLine
 }
