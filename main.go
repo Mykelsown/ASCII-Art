@@ -11,5 +11,5 @@ func main() {
 		fmt.Println("The input format is wrong.\nCorrect format: go run main.go <text-argument>")
 	}
 
-	fmt.Println(methodsandtests.Printer(os.Args[1]))
+	fmt.Print(methodsandtests.Printer(os.Args[1]))
 }
