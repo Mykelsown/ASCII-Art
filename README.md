@@ -1,4 +1,5 @@
 # ASCII ART
+
 ## Project Overview
 This is a system that logs printable ASCII characters in a formatted style to the terminal console. **How does it work?** User pass in an argument(s) of strings, then system is to check the string and output it formatted in respect to the style selcted. The styles are ready made, no need for generation of the stylero use. The each style is stored in a file named according to the style name, the styles to use are *shadow*, *standard* and *thinkertoy*.
 
