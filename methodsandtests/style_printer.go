@@ -1,63 +1,40 @@
 package methodsandtests
 
-import (
-	"log"
-	"strings"
-)
 
-func Printer(str string) string {
-	// var all strings.Builder
-	charFormatSlice := make([]string, len(str))
-	strElSlice := strings.Split(str, "")
-	for _, el := range strElSlice {
-		// _, err := all.WriteString(GetFormattedStyle(el))
-		// if err != nil {
-		// 	log.Fatal("%w", err)
-		// }
 
-		charFormatSlice = append(charFormatSlice, GetFormattedStyle(el))
-	}
-
-	var fin strings.Builder
-	unstructTwoDimSlice := make([][]string, 9)
-	for i, formEl := range charFormatSlice {
-		partOfFormEl := strings.Split(formEl, "\n")
-		unstructTwoDimSlice[i] = partOfFormEl
-		fin.WriteString(formEl)
-	}
-	
-	return unstructTwoDimSlice[0][1]
+// BannerLoader holds the loaded banner data
+type BannerLoader struct {
+	charMap map[rune][]string
 }
 
-func GetFormattedStyle(str string) string {
-	bufferedStyleFile := FileHandler()
-	line := 1
-	chLine := 1
-	var char strings.Builder
-	for bufferedStyleFile.Scan() {
-		for _, ch := range str {
-			if ch >= ' ' || ch <= '~' {
-				intCh := int(ch - ' ')
-				chLine = intCh * 9
-			}
+// PrintString converts a string to ASCII art using preloaded banner
+func (b *BannerLoader) PrintString(str string) []string {
+	if str == "" {
+		return []string{}
+	}
 
-			if line > chLine && line <= chLine+9 {
-				char.WriteString(bufferedStyleFile.Text() + "\n")
-				break
-			}
+	// Initialize 8 lines for the output
+	artLines := make([]string, 8)
+
+	for _, char := range str {
+		// Check if character is in valid ASCII range
+		if char < ' ' || char > '~' {
+			continue
 		}
-		line++
+
+		// Get character lines from preloaded map
+		charLines, exists := b.charMap[char]
+		if !exists {
+			// Use space if character not found
+			charLines = b.charMap[' ']
+		}
+
+		// Append each line to the corresponding output line
+		for i := 0; i < 8 && i < len(charLines); i++ {
+			artLines[i] += charLines[i]
+		}
 	}
 
-	// for row := 0; row < 8; row++ {
-	// 	for _, ch := range str {
-	// 		char.WriteString(bufferedStyleFile.Text())
-	// 	}
-
-	// }
-
-	if err := bufferedStyleFile.Err(); err != nil {
-		log.Fatal(err)
-	}
-	return char.String()
+	return artLines
 }
+

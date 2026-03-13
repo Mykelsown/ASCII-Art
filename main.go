@@ -7,9 +7,37 @@ import (
 )
 
 func main() {
-	if len(os.Args) > 2 {
-		fmt.Println("The input format is wrong.\nCorrect format: go run main.go <text-argument>")
+	// Check arguments
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: go run . <string>")
+		return
 	}
 
-	fmt.Print(methodsandtests.Printer(os.Args[1]))
+	input := os.Args[1]
+
+	// Handle empty string
+	if input == "" {
+		return
+	}
+
+	// Handle single newline
+	if input == "\\n" {
+		fmt.Println()
+		return
+	}
+
+	// STEP 1: Load the banner file once
+	banner, err := methodsandtests.NewBannerLoader()
+	if err != nil {
+		fmt.Println("Error loading banner:", err)
+		return
+	}
+
+	// STEP 2: Convert string to ASCII art
+	artLines := banner.PrintString(input)
+
+	// STEP 3: Print each line
+	for _, line := range artLines {
+		fmt.Println(line)
+	}
 }
